@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatisticCreateDataDto {
+public class EndpointHitDto {
     @NotBlank
     private String app;
     @NotBlank

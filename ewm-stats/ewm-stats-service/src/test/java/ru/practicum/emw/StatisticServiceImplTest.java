@@ -6,11 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.practicum.emw.mapper.StatisticMapper;
-import ru.practicum.emw.model.StatisticData;
+import ru.practicum.emw.mapper.EndpointHitMapper;
+import ru.practicum.emw.model.EndpointHit;
 import ru.practicum.emw.repository.StatisticRepository;
 import ru.practicum.emw.service.StatisticServiceImpl;
-import ru.practicum.ewm.StatisticCreateDataDto;
+import ru.practicum.ewm.EndpointHitDto;
 import ru.practicum.ewm.ViewStatDto;
 
 import java.time.LocalDateTime;
@@ -32,22 +32,22 @@ class StatisticServiceImplTest {
     private StatisticRepository repository;
 
     @Spy
-    private StatisticMapper mapper = new StatisticMapper();
+    private EndpointHitMapper mapper = new EndpointHitMapper();
 
     @InjectMocks
     private StatisticServiceImpl service;
 
     @Test
     void save() {
-        StatisticCreateDataDto createDto = new StatisticCreateDataDto();
-        StatisticData statData = new StatisticData();
+        EndpointHitDto createDto = new EndpointHitDto();
+        EndpointHit statData = new EndpointHit();
 
-        when(repository.save(any(StatisticData.class)))
+        when(repository.save(any(EndpointHit.class)))
                 .thenReturn(statData);
 
         service.save(createDto);
 
-        verify(repository).save(any(StatisticData.class));
+        verify(repository).save(any(EndpointHit.class));
     }
 
     @Test

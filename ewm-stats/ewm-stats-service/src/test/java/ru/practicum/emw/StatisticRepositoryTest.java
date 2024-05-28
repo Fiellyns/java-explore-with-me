@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import ru.practicum.emw.model.StatisticData;
+import ru.practicum.emw.model.EndpointHit;
 import ru.practicum.emw.repository.StatisticRepository;
 import ru.practicum.ewm.ViewStatDto;
 
@@ -19,34 +19,34 @@ class StatisticRepositoryTest {
     @Autowired
     private StatisticRepository repository;
 
-    private StatisticData statData1;
-    private StatisticData statData2;
-    private StatisticData statData3;
-    private StatisticData statData4;
+    private EndpointHit statData1;
+    private EndpointHit statData2;
+    private EndpointHit statData3;
+    private EndpointHit statData4;
     private LocalDateTime now;
 
     @BeforeEach
     void setUp() {
         now = LocalDateTime.now().withNano(0);
-        statData1 = StatisticData.builder()
+        statData1 = EndpointHit.builder()
                 .app("ewm-main-service")
                 .uri("/events/1")
                 .ip("64.233.163.101")
                 .timestamp(now)
                 .build();
-        statData2 = StatisticData.builder()
+        statData2 = EndpointHit.builder()
                 .app("ewm-main-service")
                 .uri("/events/2")
                 .ip("64.233.163.101")
                 .timestamp(now)
                 .build();
-        statData3 = StatisticData.builder()
+        statData3 = EndpointHit.builder()
                 .app("ewm-main-service")
                 .uri("/events/1")
                 .ip("74.233.163.101")
                 .timestamp(now)
                 .build();
-        statData4 = StatisticData.builder()
+        statData4 = EndpointHit.builder()
                 .app("ewm-main-service")
                 .uri("/events/1")
                 .ip("74.233.163.101")

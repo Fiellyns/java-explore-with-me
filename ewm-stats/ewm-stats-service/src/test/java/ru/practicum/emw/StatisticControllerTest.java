@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.emw.controller.StatisticController;
 import ru.practicum.emw.service.StatisticService;
-import ru.practicum.ewm.StatisticCreateDataDto;
+import ru.practicum.ewm.EndpointHitDto;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -35,14 +35,14 @@ class StatisticControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    private StatisticCreateDataDto dto;
+    private EndpointHitDto dto;
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @BeforeEach
     void setUp() {
         String date = LocalDateTime.now().format(DATE_TIME_FORMATTER);
-        dto = StatisticCreateDataDto.builder()
+        dto = EndpointHitDto.builder()
                 .app("app")
                 .uri("uri")
                 .ip("ip")
@@ -61,7 +61,7 @@ class StatisticControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        verify(service).save(any(StatisticCreateDataDto.class));
+        verify(service).save(any(EndpointHitDto.class));
     }
 
     @Test
@@ -75,7 +75,7 @@ class StatisticControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        verify(service, never()).save(any(StatisticCreateDataDto.class));
+        verify(service, never()).save(any(EndpointHitDto.class));
     }
 
     @Test
