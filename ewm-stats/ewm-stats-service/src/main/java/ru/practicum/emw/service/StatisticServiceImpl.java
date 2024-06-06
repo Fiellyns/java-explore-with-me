@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatisticServiceImpl implements StatisticService {
 
-    public final StatisticRepository statRepository;
+    private final StatisticRepository statRepository;
     private final EndpointHitMapper mapper;
 
     @Transactional

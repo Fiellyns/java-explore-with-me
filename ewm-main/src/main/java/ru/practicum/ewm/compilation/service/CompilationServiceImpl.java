@@ -1,6 +1,6 @@
 package ru.practicum.ewm.compilation.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,31 +10,19 @@ import ru.practicum.ewm.compilation.dto.UpdateCompilationDto;
 import ru.practicum.ewm.compilation.mapper.CompilationMapper;
 import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.compilation.repository.CompilationRepository;
-import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.exception.NotFoundException;
-import ru.practicum.ewm.request.repository.RequestRepository;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
 
+    private final CompilationRepository compilationRepository;
     private final CompilationMapper compilationMapper;
     private final EventRepository eventRepository;
-    private final RequestRepository requestRepository;
-    private final EventMapper eventMapper;
-    public CompilationRepository compilationRepository;
-
-    @Autowired
-    public CompilationServiceImpl(CompilationRepository compilationRepository, CompilationMapper compilationMapper, EventRepository eventRepository, RequestRepository requestRepository, EventMapper eventMapper) {
-        this.compilationRepository = compilationRepository;
-        this.compilationMapper = compilationMapper;
-        this.eventRepository = eventRepository;
-        this.requestRepository = requestRepository;
-        this.eventMapper = eventMapper;
-    }
 
     @Transactional
     @Override
@@ -43,11 +31,9 @@ public class CompilationServiceImpl implements CompilationService {
         if (events.size() < newCompilationDto.getEvents().size()) {
             throw new NotFoundException("Не все события присутствуют!");
         }
-        Compilation compilation = compilationRepository.save(
-                compilationMapper.toCompilation(newCompilationDto, events));
+        Compilation compilation = compilationRepository.save(compilationMapper.toCompilation(newCompilationDto, events));
 
-        return compilationMapper.toDto(
-                compilation);
+        return compilationMapper.toDto(compilation);
     }
 
     @Transactional
@@ -66,8 +52,7 @@ public class CompilationServiceImpl implements CompilationService {
             throw new NotFoundException("Не все события присутствуют!");
         }
         compilation.setEvents(events);
-        Compilation updated = compilationRepository.save(
-                compilationMapper.update(dto, compilation));
+        Compilation updated = compilationRepository.save(compilationMapper.update(dto, compilation));
 
         return compilationMapper.toDto(updated);
     }
@@ -75,7 +60,9 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional(readOnly = true)
     @Override
     public List<CompilationDto> getAll(Boolean pinned, PageRequest pageRequest) {
-        List<Compilation> compilations = compilationRepository.findAllByPinned(pinned, pageRequest);
+        List<Compilation> compilations;
+        compilations = (pinned == null) ? compilationRepository.findAll(pageRequest).getContent() :
+                compilationRepository.findAllByPinned(pinned, pageRequest);
         return compilationMapper.toDtoList(compilations);
     }
 

@@ -1,7 +1,7 @@
 package ru.practicum.ewm.event.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 import static ru.practicum.ewm.event.model.EventState.*;
 
 @Service
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -50,24 +51,7 @@ public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
     private final RequestMapper requestMapper;
     private final StatisticClient client;
-    public EventRepository eventRepository;
-
-    @Autowired
-    public EventServiceImpl(EventRepository eventRepository,
-                            EventMapper eventMapper,
-                            UserRepository userRepository,
-                            CategoryRepository categoryRepository,
-                            RequestRepository requestRepository,
-                            RequestMapper requestMapper,
-                            StatisticClient client) {
-        this.eventRepository = eventRepository;
-        this.eventMapper = eventMapper;
-        this.userRepository = userRepository;
-        this.categoryRepository = categoryRepository;
-        this.requestRepository = requestRepository;
-        this.requestMapper = requestMapper;
-        this.client = client;
-    }
+    private final EventRepository eventRepository;
 
     @Transactional
     @Override

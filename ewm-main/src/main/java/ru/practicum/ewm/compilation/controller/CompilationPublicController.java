@@ -19,8 +19,6 @@ import java.util.List;
 @RequestMapping("/compilations")
 public class CompilationPublicController {
 
-    private static final int DEFAULT_SIZE = 10;
-
     @Autowired
     private CompilationService service;
 
@@ -30,13 +28,11 @@ public class CompilationPublicController {
             @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) Integer from,
             @Positive @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
         log.info("Поступил GET-запрос в /compilations: pinned={}, from={}, size={}", pinned, from, size);
-        if (size < DEFAULT_SIZE) {
-            size = DEFAULT_SIZE;
-        }
         int page = from / size;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.unsorted());
         List<CompilationDto> compilations = service.getAll(pinned, pageRequest);
         log.info("GET-запрос /compilations был обработан: {}", compilations);
+        // Иногда постман тест создаёт не достаточно закреплённых подборок(pinned), из-за этого не проходит тест
         return compilations;
     }
 

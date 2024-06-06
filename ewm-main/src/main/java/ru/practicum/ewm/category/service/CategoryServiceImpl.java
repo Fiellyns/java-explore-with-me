@@ -1,6 +1,6 @@
 package ru.practicum.ewm.category.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,18 +16,12 @@ import ru.practicum.ewm.exception.NotFoundException;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
+    public final CategoryRepository categoryRepository;
     private final EventRepository eventRepository;
     private final CategoryMapper mapper;
-    public CategoryRepository categoryRepository;
-
-    @Autowired
-    public CategoryServiceImpl(CategoryRepository repository, EventRepository eventRepository, CategoryMapper mapper) {
-        this.categoryRepository = repository;
-        this.eventRepository = eventRepository;
-        this.mapper = mapper;
-    }
 
     @Transactional
     @Override
