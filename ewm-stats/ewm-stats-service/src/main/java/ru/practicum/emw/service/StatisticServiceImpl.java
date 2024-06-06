@@ -27,6 +27,9 @@ public class StatisticServiceImpl implements StatisticService {
     @Transactional(readOnly = true)
     @Override
     public List<ViewStatDto> getHits(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("Начальное время должно быть раньше конечного!");
+        }
         if (unique) {
             return statRepository.findAllUniqueHitByTimeBetween(start, end, uris);
         } else {
