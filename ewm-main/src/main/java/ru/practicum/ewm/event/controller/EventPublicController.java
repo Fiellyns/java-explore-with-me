@@ -57,7 +57,7 @@ public class EventPublicController {
         log.info("Поступил GET-запрос в /events: " +
                         "text={}, categories={}, paid={}, rangeStart={}, rangeEnd={}, onlyAvailable={}, sort={}",
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort);
-        int page = from / size;
+        int page = from/size;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.unsorted());
         if (sort != null && sort.equals(EVENT_DATE.toString())) {
             pageRequest = pageRequest.withSort(Sort.Direction.ASC, "eventDate");
