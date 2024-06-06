@@ -2,6 +2,7 @@ package ru.practicum.emw;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -32,7 +33,7 @@ class StatisticServiceImplTest {
     private StatisticRepository repository;
 
     @Spy
-    private EndpointHitMapper mapper = new EndpointHitMapper();
+    private EndpointHitMapper mapper = Mappers.getMapper(EndpointHitMapper.class);
 
     @InjectMocks
     private StatisticServiceImpl service;

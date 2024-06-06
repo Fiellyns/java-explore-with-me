@@ -1,26 +1,20 @@
 package ru.practicum.emw.mapper;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 import ru.practicum.emw.model.EndpointHit;
 import ru.practicum.ewm.EndpointHitDto;
 
-@Component
-public class EndpointHitMapper {
-    public EndpointHitDto toDto(EndpointHit endpointHit) {
-        return new EndpointHitDto().toBuilder()
-                .app(endpointHit.getApp())
-                .ip(endpointHit.getIp())
-                .uri(endpointHit.getUri())
-                .timestamp(endpointHit.getTimestamp())
-                .build();
-    }
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
-    public EndpointHit toModel(EndpointHitDto endpointHitDto) {
-        return new EndpointHit().toBuilder()
-                .app(endpointHitDto.getApp())
-                .uri(endpointHitDto.getUri())
-                .ip(endpointHitDto.getIp())
-                .timestamp(endpointHitDto.getTimestamp())
-                .build();
-    }
+@Component
+@Mapper(componentModel = SPRING)
+public interface EndpointHitMapper {
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "timestamp", source = "timestamp", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    EndpointHit toHit(EndpointHitDto endpointHitDto);
+
+    EndpointHitDto toDto(EndpointHit endpointHit);
 }
