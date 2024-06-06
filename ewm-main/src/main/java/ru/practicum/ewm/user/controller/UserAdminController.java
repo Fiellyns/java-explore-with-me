@@ -39,7 +39,7 @@ public class UserAdminController {
             @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) Integer from,
             @Positive @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
         log.info("Поступил GET-запрос в /admin/users: ids={}", ids);
-        int page = from/size;
+        int page = from / size;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.unsorted());
         List<UserDto> users = service.getAll(ids, pageRequest);
         log.info("GET-запрос /admin/users был обработан: {}", users);

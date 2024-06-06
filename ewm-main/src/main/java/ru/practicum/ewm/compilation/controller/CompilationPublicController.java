@@ -33,7 +33,7 @@ public class CompilationPublicController {
         if (size < DEFAULT_SIZE) {
             size = DEFAULT_SIZE;
         }
-        int page = from/size;
+        int page = from / size;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.unsorted());
         List<CompilationDto> compilations = service.getAll(pinned, pageRequest);
         log.info("GET-запрос /compilations был обработан: {}", compilations);

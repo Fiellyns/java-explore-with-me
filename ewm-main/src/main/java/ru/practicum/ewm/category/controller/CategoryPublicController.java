@@ -31,7 +31,7 @@ public class CategoryPublicController {
             @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) Integer from,
             @Positive @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
         log.info("Поступил GET-запрос в /categories");
-        int page = from/size;
+        int page = from / size;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.unsorted());
         List<CategoryDto> categories = service.getAll(pageRequest);
         log.info("GET-запрос /categories был обработан: {}", categories);
