@@ -26,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDto save(CategoryRequestDto dto) {
-        return mapper.toDto(categoryRepository.save(mapper.toCategory(dto)));
+        return mapper.toDto(categoryRepository.save(mapper.toModel(dto)));
     }
 
     @Transactional

@@ -23,7 +23,7 @@ public interface CompilationMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "events", source = "eventsList")
-    Compilation toCompilation(NewCompilationDto dto, List<Event> eventsList);
+    Compilation toModel(NewCompilationDto dto, List<Event> eventsList);
 
     CompilationDto toDto(Compilation compilation);
 

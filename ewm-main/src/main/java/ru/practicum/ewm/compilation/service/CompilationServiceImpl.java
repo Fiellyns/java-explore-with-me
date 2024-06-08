@@ -31,7 +31,7 @@ public class CompilationServiceImpl implements CompilationService {
         if (events.size() < newCompilationDto.getEvents().size()) {
             throw new NotFoundException("Не все события присутствуют!");
         }
-        Compilation compilation = compilationRepository.save(compilationMapper.toCompilation(newCompilationDto, events));
+        Compilation compilation = compilationRepository.save(compilationMapper.toModel(newCompilationDto, events));
 
         return compilationMapper.toDto(compilation);
     }

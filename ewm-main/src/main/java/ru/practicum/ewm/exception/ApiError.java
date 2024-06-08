@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -19,14 +19,14 @@ public class ApiError {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     @JsonIgnore
-    private final List<StackTraceElement> errors;
+    private final List<String> errors;
     private final String message;
     private final String reason;
     private final String status;
     private final String timestamp;
 
     public ApiError(Exception e, String message, String reason, HttpStatus status) {
-        this.errors = Arrays.asList(e.getStackTrace());
+        this.errors = Collections.singletonList(stackTraceToString(e));
         this.message = message;
         this.reason = reason;
         this.status = status.getReasonPhrase().toUpperCase();
@@ -34,8 +34,8 @@ public class ApiError {
     }
 
     public ApiError(Exception e, HttpStatus status) {
-        this.errors = Arrays.asList(e.getStackTrace());
-        this.message = stackTraceToString(e);
+        this.errors = Collections.singletonList(stackTraceToString(e));
+        this.message = e.getMessage();
         this.reason = "Произошла непредвиденная ошибка";
         this.status = status.getReasonPhrase().toUpperCase();
         this.timestamp = LocalDateTime.now().format(FORMATTER);

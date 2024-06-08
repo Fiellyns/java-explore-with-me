@@ -29,7 +29,7 @@ public interface EventMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "createdOn", expression = "java(LocalDateTime.now().withNano(0))")
-    Event toEvent(NewEventDto eventDto, User initiator, Category category, EventState state);
+    Event toModel(NewEventDto eventDto, User initiator, Category category, EventState state);
 
 
     @Mapping(target = "id", ignore = true)

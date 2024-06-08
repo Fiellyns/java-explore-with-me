@@ -62,7 +62,7 @@ public class EventServiceImpl implements EventService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException("Категория с id:" + userId + " не найдена"));
         Event event = eventRepository.save(
-                eventMapper.toEvent(eventDto, user, category, EventState.PENDING));
+                eventMapper.toModel(eventDto, user, category, EventState.PENDING));
         return eventMapper.toFullDto(event, null, null);
     }
 
@@ -93,9 +93,10 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие с id:" + eventId + " не найдено"));
 
-        Map<Long, Long> viewStatMap = getEventViews(List.of(event));
+        List<Event> eventList = List.of(event);
+        Map<Long, Long> viewStatMap = getEventViews(eventList);
 
-        Map<Long, Long> confirmedRequestMap = getConfirmedRequests(List.of(event));
+        Map<Long, Long> confirmedRequestMap = getConfirmedRequests(eventList);
 
         return eventMapper.toFullDto(event,
                 viewStatMap.getOrDefault(eventId, 0L),
@@ -218,9 +219,10 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException("Событие id=" + id + " еще не опубликовано");
         }
 
-        Map<Long, Long> viewStatMap = getEventViews(List.of(event));
+        List<Event> eventList = List.of(event);
+        Map<Long, Long> viewStatMap = getEventViews(eventList);
 
-        Map<Long, Long> confirmedRequestMap = getConfirmedRequests(List.of(event));
+        Map<Long, Long> confirmedRequestMap = getConfirmedRequests(eventList);
 
         return eventMapper.toFullDto(event,
                 viewStatMap.getOrDefault(id, 0L),
@@ -301,7 +303,8 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие с id:" + eventId + " не найдено"));
 
-        Map<Long, Long> confirmedRequestMap = getConfirmedRequests(List.of(event));
+        List<Event> eventList = List.of(event);
+        Map<Long, Long> confirmedRequestMap = getConfirmedRequests(eventList);
         long participantLimit = event.getParticipantLimit();
         long currentCountParticipant = confirmedRequestMap.getOrDefault(eventId, 0L);
 

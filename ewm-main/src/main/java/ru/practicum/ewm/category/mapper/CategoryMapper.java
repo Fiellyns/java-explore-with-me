@@ -17,7 +17,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 public interface CategoryMapper {
 
     @Mapping(target = "id", ignore = true)
-    Category toCategory(CategoryRequestDto dto);
+    Category toModel(CategoryRequestDto dto);
 
     CategoryDto toDto(Category category);
 

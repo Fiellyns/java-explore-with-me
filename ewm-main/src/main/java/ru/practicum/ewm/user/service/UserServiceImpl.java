@@ -21,13 +21,17 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto save(UserCreateDto user) {
-        return mapper.toDto(repository.save(mapper.toUser(user)));
+        return mapper.toDto(repository.save(mapper.toModel(user)));
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<UserDto> getAll(List<Long> ids, Pageable pageable) {
-        return mapper.toDtoList(repository.findAllByIdIn(ids, pageable));
+        if (ids == null || ids.isEmpty()) {
+            return mapper.toDtoList(repository.findAll(pageable));
+        } else {
+            return mapper.toDtoList(repository.findAllByIdIn(ids, pageable));
+        }
     }
 
     @Transactional
