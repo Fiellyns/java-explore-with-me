@@ -76,6 +76,9 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new NotFoundException("Событие с id:" + commentDto.getEventId() + " не найдено"));
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("Комментарий с id:" + commentId + " не найден"));
+        if (!user.getId().equals(comment.getAuthor().getId())) {
+            throw new NotAccessException("Только владелец комментария может обновлять его содержимое");
+        }
         if (comment.getState().equals(CommentState.PUBLISHED)) {
             throw new NotAccessException("Изменять можно только отложенные или отмененные комментарии");
         }
@@ -89,7 +92,21 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public void delete(long commentId) {
+    public void delete(long userId, long commentId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id:" + userId + " не найден"));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("Комментарий с id:" + commentId + " не найден"));
+        if (user.getId().equals(comment.getAuthor().getId())) {
+            commentRepository.deleteById(commentId);
+        } else {
+            throw new NotAccessException("Только владелец комментария может удалять его");
+        }
+    }
+
+    @Transactional
+    @Override
+    public void deleteByAdmin(long commentId) {
         commentRepository.deleteById(commentId);
     }
 

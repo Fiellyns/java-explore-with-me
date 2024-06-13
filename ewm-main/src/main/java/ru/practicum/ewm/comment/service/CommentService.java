@@ -14,7 +14,9 @@ public interface CommentService {
 
     CommentDto update(long userId, long commentId, CommentRequestDto commentDto);
 
-    void delete(long commentId);
+    void delete(long userId, long commentId);
+
+    void deleteByAdmin(long commentId);
 
     List<CommentDto> getAll(CommentAdminRequest request,
                             PageRequest pageRequest);

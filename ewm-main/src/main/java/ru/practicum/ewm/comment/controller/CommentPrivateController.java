@@ -46,7 +46,7 @@ public class CommentPrivateController {
     public void delete(@PathVariable long userId,
                        @PathVariable long commentId) {
         log.info("Поступил DELETE-запрос в /users/{}/events/comments/{}", userId, commentId);
-        service.delete(commentId);
+        service.delete(userId, commentId);
         log.info("DELETE-запрос /users/{}/events/comments/{} был обработан", userId, commentId);
     }
 }

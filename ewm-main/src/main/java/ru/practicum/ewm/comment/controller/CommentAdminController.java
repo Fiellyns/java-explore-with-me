@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.comment.dto.CommentAdminRequestDto;
 import ru.practicum.ewm.comment.dto.CommentDto;
@@ -59,10 +60,17 @@ public class CommentAdminController {
     @PatchMapping("/{commentId}")
     public CommentDto moderate(@PathVariable long commentId,
                                @RequestBody CommentAdminRequestDto requestDto) {
-        log.info("Request received PATCH /admin/comments/commentId={}: comment {}", commentId, requestDto);
         log.info("Поступил PATCH-запрос в /admin/comments/{}: комментарий: {}", commentId, requestDto);
         CommentDto moderatedComment = service.moderate(commentId, requestDto);
         log.info("PATCH-запрос /admin/comments/{} был обработан: {}", commentId, moderatedComment);
         return moderatedComment;
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{commentId}")
+    public void delete(@PathVariable long commentId) {
+        log.info("Поступил DELETE-запрос в /admin/comments/{}", commentId);
+        service.deleteByAdmin(commentId);
+        log.info("DELETE-запрос /admin/comments/{} был обработан", commentId);
     }
 }
