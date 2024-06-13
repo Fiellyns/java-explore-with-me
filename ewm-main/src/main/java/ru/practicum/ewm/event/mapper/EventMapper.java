@@ -6,6 +6,8 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.stereotype.Component;
 import ru.practicum.ewm.category.model.Category;
+import ru.practicum.ewm.comment.mapper.CommentMapper;
+import ru.practicum.ewm.comment.model.Comment;
 import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
@@ -23,7 +25,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(componentModel = SPRING,
         imports = {LocalDateTime.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        uses = UserMapper.class)
+        uses = {UserMapper.class, CommentMapper.class})
 public interface EventMapper {
 
     @Mapping(target = "id", ignore = true)
@@ -43,7 +45,8 @@ public interface EventMapper {
     @Mapping(target = "publishedOn", source = "event.publishedOn", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "confirmedRequests", source = "confirmedRequests", defaultValue = "0")
     @Mapping(target = "views", source = "views", defaultValue = "0L")
-    EventFullDto toFullDto(Event event, Long views, Long confirmedRequests);
+    @Mapping(target = "comments", source = "comments")
+    EventFullDto toFullDto(Event event, Long views, Long confirmedRequests, List<Comment> comments);
 
     @Mapping(target = "eventDate", source = "event.eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "confirmedRequests", source = "confirmedRequests", defaultValue = "0")
@@ -82,7 +85,8 @@ public interface EventMapper {
         return events.stream()
                 .map(event -> toFullDto(event,
                         viewStatMap.getOrDefault(event.getId(), 0L),
-                        confirmedRequests.getOrDefault(event.getId(), 0L)))
+                        confirmedRequests.getOrDefault(event.getId(), 0L),
+                        null))
                 .collect(Collectors.toList());
     }
 }

@@ -1,18 +1,23 @@
 package ru.practicum.ewm.event.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.ewm.category.dto.CategoryDto;
+import ru.practicum.ewm.comment.dto.CommentDto;
 import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.model.Location;
 import ru.practicum.ewm.user.dto.UserShortDto;
+
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventFullDto {
 
     private Long id;
@@ -46,4 +51,6 @@ public class EventFullDto {
     private String publishedOn;
 
     private Long views;
+
+    private List<CommentDto> comments;
 }

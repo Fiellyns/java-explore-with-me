@@ -9,6 +9,9 @@ import ru.practicum.ewm.StatisticClient;
 import ru.practicum.ewm.ViewStatDto;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
+import ru.practicum.ewm.comment.model.Comment;
+import ru.practicum.ewm.comment.model.CommentState;
+import ru.practicum.ewm.comment.repository.CommentRepository;
 import ru.practicum.ewm.event.controller.SortQuery;
 import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.event.mapper.EventMapper;
@@ -49,6 +52,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
+    private final CommentRepository commentRepository;
     private final RequestMapper requestMapper;
     private final StatisticClient client;
     private final EventRepository eventRepository;
@@ -63,7 +67,7 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("Категория с id:" + userId + " не найдена"));
         Event event = eventRepository.save(
                 eventMapper.toModel(eventDto, user, category, EventState.PENDING));
-        return eventMapper.toFullDto(event, null, null);
+        return eventMapper.toFullDto(event, null, null, null);
     }
 
     @Transactional(readOnly = true)
@@ -98,9 +102,12 @@ public class EventServiceImpl implements EventService {
 
         Map<Long, Long> confirmedRequestMap = getConfirmedRequests(eventList);
 
+        Map<Long, List<Comment>> comments = getComments(List.of(event));
+
         return eventMapper.toFullDto(event,
                 viewStatMap.getOrDefault(eventId, 0L),
-                confirmedRequestMap.getOrDefault(eventId, 0L));
+                confirmedRequestMap.getOrDefault(eventId, 0L),
+                comments.getOrDefault(eventId, Collections.emptyList()));
     }
 
     @Transactional
@@ -131,7 +138,7 @@ public class EventServiceImpl implements EventService {
         Event updatedEvent = eventRepository.save(
                 eventMapper.update(updateEventDto, event));
 
-        return eventMapper.toFullDto(updatedEvent, null, null);
+        return eventMapper.toFullDto(updatedEvent, null, null, null);
 
     }
 
@@ -207,7 +214,7 @@ public class EventServiceImpl implements EventService {
         Event moderatedEvent = eventRepository.save(
                 eventMapper.update(updateEventDto, event));
 
-        return eventMapper.toFullDto(moderatedEvent, null, null);
+        return eventMapper.toFullDto(moderatedEvent, null, null, null);
     }
 
     @Transactional(readOnly = true)
@@ -224,9 +231,12 @@ public class EventServiceImpl implements EventService {
 
         Map<Long, Long> confirmedRequestMap = getConfirmedRequests(eventList);
 
+        Map<Long, List<Comment>> comments = getComments(List.of(event));
+
         return eventMapper.toFullDto(event,
                 viewStatMap.getOrDefault(id, 0L),
-                confirmedRequestMap.getOrDefault(id, 0L));
+                confirmedRequestMap.getOrDefault(id, 0L),
+                comments.getOrDefault(id, Collections.emptyList()));
     }
 
     @Transactional(readOnly = true)
@@ -368,5 +378,18 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toMap(
                         RequestsCountDto::getEventId, RequestsCountDto::getCountRequests));
 
+    }
+
+    private Map<Long, List<Comment>> getComments(List<Event> events) {
+        if (events.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        List<Long> eventIds = events.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
+        List<Comment> comments = commentRepository.findAllByEventIdInAndStateIs(eventIds, CommentState.PUBLISHED);
+
+        return comments.stream()
+                .collect(Collectors.groupingBy(comment -> comment.getEvent().getId()));
     }
 }
